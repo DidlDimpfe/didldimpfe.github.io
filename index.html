@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Glass+Antiqua&family=Inter:wght@400;500;700&family=Oswald&display=swap"
+      rel="stylesheet"
+    />
+    <script src=https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.3.0/math.min.js></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", sans-serif;
+        background: linear-gradient(to top right, #8ec5fc, #e0c3fc);
+        height: 100vh;
+        color: #495057;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      svg {
+        fill: #495057;
+        height: 18px;
+      }
+
+      .calculator {
+        display: grid;
+        grid-template-columns: auto auto auto auto;
+        gap: 4px;
+        justify-items: center;
+        background-color: #2c2c2c;
+        padding: 15px;
+        border-radius: 20px;
+        box-shadow: 0 0 32px rgba(0, 0, 0, 0.5);
+      }
+
+      button {
+        border: none;
+        height: 56px;
+        width: 56px;
+        border-radius: 9999999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #dee2e6;
+        font-weight: 500;
+        font-size: 26px;
+      }
+
+      form {
+        grid-column: 1 / -1;
+      }
+      .input {
+        font-family: inherit;
+        border: 0;
+        border: 2px solid #9b9b9b;
+        border-radius: 10px;
+        outline: 0;
+        font-size: 22px;
+        color: #edf2ff;
+        background: transparent;
+        backdrop-filter: sepia(20%);
+        transition: border-color 0.2s;
+        padding: 6px;
+        width: 236px;
+        margin-bottom: 6px;
+      }
+
+      .operator {
+        background-color: #ffa94d;
+      }
+
+      .ac {
+        background-color: #ff6b6b;
+      }
+
+      .equals {
+        background-color: #91a7ff;
+      }
+
+
+    </style>
+  </head>
+  <body>
+    <!-- "selfex" class is for buttons wich just can be added like this -->
+    <div class="calculator">
+      <form action="" method="get" class="form-example">
+        <input type="text" placeholder="Insert here..." class="input"></input>
+      </form>
+      <button class="ac">AC</button>
+      <button class="parentheses operator">()</button>
+      <button class="square-root operator selfex">^</button>
+      <button class="divide operator">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="black"
+        >
+          <circle cx="12" cy="6" r="2"></circle>
+          <rect x="5" y="11" width="14" height="2"></rect>
+          <circle cx="12" cy="18" r="2"></circle>
+        </svg>
+      </button>
+      <button class="seven selfex">7</button>
+      <button class="eight selfex">8</button>
+      <button class="nine selfex">9</button>
+      <button class="multiply operator">x</button>
+      <button class="four selfex">4</button>
+      <button class="five selfex">5</button>
+      <button class="six selfex">6</button>
+      <button class="minus operator selfex">-</button>
+      <button class="one selfex">1</button>
+      <button class="two selfex">2</button>
+      <button class="three selfex">3</button>
+      <button class="add operator selfex">+</button>
+      <button class="zero selfex">0</button>
+      <button class="point selfex">.</button>
+      <button class="remove">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          class="icon"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M2.515 10.674a1.875 1.875 0 0 0 0 2.652L8.89 19.7c.352.351.829.549 1.326.549H19.5a3 3 0 0 0 3-3V6.75a3 3 0 0 0-3-3h-9.284c-.497 0-.974.198-1.326.55l-6.375 6.374ZM12.53 9.22a.75.75 0 1 0-1.06 1.06L13.19 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06l1.72-1.72 1.72 1.72a.75.75 0 1 0 1.06-1.06L15.31 12l1.72-1.72a.75.75 0 1 0-1.06-1.06l-1.72 1.72-1.72-1.72Z"
+            clip-rule="evenodd"
+          />
+        </svg>
+      </button>
+      <button class="equals">=</button>
+    </div>
+    <script type="module">
+        const input = document.querySelector(".input");
+        const multiply = document.querySelector(".multiply");
+        const ac = document.querySelector(".ac");
+        const divide = document.querySelector(".divide");
+        const parentheses = document.querySelector(".parentheses");
+        const remove = document.querySelector(".remove");
+        const equal = document.querySelector(".equals");
+        let evaluation = "";
+
+        const addCharacter = function(toAdd) {
+            evaluation += toAdd;
+            input.value += toAdd;
+        }
+        input.addEventListener("change", (event) => {
+            evaluation = event.target.value;
+        })
+        document.querySelectorAll(".selfex").forEach((item) => {
+            item.addEventListener("click", () => {
+                const toAdd = item.textContent;
+                addCharacter(toAdd);
+            });
+        });
+        divide.addEventListener("click", () => {
+            addCharacter("/");
+        });
+        multiply.addEventListener("click", () => {
+            addCharacter("*");
+        });
+        ac.addEventListener("click", () => {
+            input.value = "";
+            evaluation = "";
+        });
+        parentheses.addEventListener("click", () => {
+            const paranthesesAreEqual = [...evaluation].reduce((acc, curr) => {
+                if (curr !== "(" && curr !== ")") return acc;
+                return curr === "(" ? acc+1 : acc-1;
+            }, 0) === 0;
+            if (paranthesesAreEqual || [...evaluation].at(-1) === "(") addCharacter("(");
+            else addCharacter(")");
+        });
+        remove.addEventListener("click", () => {
+            const now = [...evaluation].
+            slice(0, -1).join("");
+            input.value = now;
+            evaluation = now;
+        });
+        equal.addEventListener("click", () => {
+            try {
+                input.value = math.eval(evaluation);
+            } catch(err) {
+                alert("Syntax error")
+            }
+        });
+    </script>
+  </body>
+</html>
